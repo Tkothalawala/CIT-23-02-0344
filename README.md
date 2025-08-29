@@ -1,164 +1,157 @@
-# CCS3308 – Virtualization and Containers – Assignment 1
+CCS3308 – Virtualization and Containers – Assignment 1
 
-**Due Date:** 15th August 2025
+🧑‍🎓 Student: Dilshan Kodithuwakku
+🆔 Registration No: CIT-23-02-0344
+📅 Due Date: 15th August 2025
+📦 Application Overview
 
-This repository contains a minimal, fully working Docker-based web application with **two services** and **one persistent volume**:
+This project is a containerized web application using Docker that includes:
 
-- **Service 1:** Flask web app (port **5000**)
-- **Service 2:** PostgreSQL database (stateful, persisted using named volume **`myapp-db`**)
+    A simple Flask web app
 
-The Flask app increments a visit counter stored in PostgreSQL, proving that data **persists across restarts**.
+    A PostgreSQL database
 
----
+    A persistent Docker volume for data storage
 
-## Deployment Requirements
-- Ubuntu 20.04+ or 22.04+
-- Docker Engine
-- Docker Compose plugin (optional, only if you want to use `docker-compose.yaml`)
-- Git (for submission to GitHub)
+    Docker network for container communication
 
-### Install on Ubuntu (one-time)
-```bash
-# 1) Update packages
+This setup demonstrates a multi-service application using Docker, as required by Assignment 1.
+📋 Features
+
+✅ Two services (Flask + PostgreSQL)
+✅ One named volume (myapp-db)
+✅ Custom Docker network (myapp-net)
+✅ Restart policy: on-failure
+✅ Scripts to manage the lifecycle
+✅ README and documentation
+⚙️ System Requirements
+
+    Ubuntu 20.04+ or 22.04+
+
+    Docker Engine
+
+    Docker Compose plugin (optional)
+
+    Git
+
+🧪 Installation (on Ubuntu)
+
+First, install Docker (if not already done):
+
+# 1. Install Docker dependencies
 sudo apt-get update
-
-# 2) Install Docker Engine (using official repo)
 sudo apt-get install -y ca-certificates curl gnupg
+
+# 2. Add Docker GPG key and repo
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-echo       "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu       $(. /etc/os-release && echo $VERSION_CODENAME) stable" |       sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 3. Install Docker Engine & Compose
 sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# 3) Run Docker without sudo (log out/in after this)
+# 4. Allow running docker without sudo
 sudo usermod -aG docker $USER
 newgrp docker
+
+# 5. Confirm installation
 docker version
-```
 
----
+🚀 Running the App
 
-## Application Description
-- A basic **Flask** application exposes `/` and shows a **visit count** fetched from **PostgreSQL**.
-- PostgreSQL stores the counter in a table; the data is persisted in Docker **named volume `myapp-db`**.
+    Unzip the project:
 
----
+unzip ccs3308-docker-app.zip
+cd ccs3308-docker-app
 
-## Network and Volume Details
-- **Network:** `myapp-net` (bridge) – used so containers can talk to each other.
-- **Volume:** `myapp-db` – mounted at `/var/lib/postgresql/data` inside the `postgres` container.
+    Make scripts executable (first time only):
 
----
+chmod +x *.sh
 
-## Container Configuration
-- **PostgreSQL (`my-postgres`)**
-  - Image: `postgres:15`
-  - Env: `POSTGRES_USER=admin`, `POSTGRES_PASSWORD=admin123`, `POSTGRES_DB=mydb`
-  - Volume: `myapp-db:/var/lib/postgresql/data`
-  - Restart policy: `on-failure`
-- **Flask (`my-flask`)**
-  - Image: built from `flask-app/Dockerfile` → `my-flask-app`
-  - Port mapping: `5000:5000`
-  - Env: `DB_HOST=my-postgres`, `DB_USER=admin`, `DB_PASSWORD=admin123`, `DB_NAME=mydb`
-  - Restart policy: `on-failure`
+    Prepare app (create volume/network, build image):
 
----
-
-## Container List
-- `my-postgres` – PostgreSQL database
-- `my-flask` – Flask web service
-
----
-
-## Instructions (Scripts)
-From the root of this project:
-
-```bash
-# Make scripts executable (first time only)
-chmod +x prepare-app.sh start-app.sh stop-app.sh remove-app.sh
-
-# Create application resources (network, volume, build image)
 ./prepare-app.sh
 
-# Run the application (launch containers)
-./start-app.sh
-# => The app is available at http://localhost:5000
+    Start containers:
 
-# Pause (stop containers but keep data)
+./start-app.sh
+
+    Access it in your browser at:
+
+http://localhost:5000
+
+    Stop the containers (keep data):
+
 ./stop-app.sh
 
-# Delete everything (containers, image, network, volume)
+    Remove everything (containers, volume, image, network):
+
 ./remove-app.sh
-```
 
----
+🗃️ Project Structure
 
-## Instructions (Optional: Docker Compose)
-```bash
-# Build and run in background
-docker compose up -d
+ccs3308-docker-app/
+├── flask-app/
+│   ├── app.py
+│   └── Dockerfile
+├── prepare-app.sh
+├── start-app.sh
+├── stop-app.sh
+├── remove-app.sh
+├── docker-compose.yaml  (optional)
+└── README.md
 
-# Stop containers (keeps data)
-docker compose stop
+🧠 App Logic
 
-# Remove containers (keeps data & volume)
-docker compose down
+    On visiting http://localhost:5000
 
-# Remove everything including volume
-docker compose down -v
-```
+    , a counter (stored in PostgreSQL) is incremented and shown.
 
----
+    The visit count is stored in a persistent Docker volume myapp-db.
 
-## Example Workflow
-```bash
-# Create application resources
-./prepare-app.sh
-Preparing app ...
+    Restarting the containers does not reset the counter.
 
-# Run the application
-./start-app.sh
-Starting app ...
-The app is available at http://localhost:5000
+🧪 Docker Details
 
-# Open a web browser and interact with the application
-# You should see the visit counter increase on refresh.
+🛠 Services:
 
-# Pause the application
-./stop-app.sh
-Stopping app ...
+    Flask web service (container: my-flask)
 
-# Delete all application resources
-./remove-app.sh
-Removed app.
-```
+    PostgreSQL database (container: my-postgres)
 
----
+📦 Volume:
 
-## Access via Web Browser
-- Local machine: open **http://localhost:5000**
-- If running on a remote Ubuntu server, open `http://<server-ip>:5000` in your browser.
+    myapp-db (bound to /var/lib/postgresql/data)
 
----
+🌐 Network:
 
-## Notes
-- Restarting or recreating containers will **not reset** the counter because data is stored in the persistent volume `myapp-db`.
-- If port **5000** is already used on your machine, change the mapping in `start-app.sh` or `docker-compose.yaml` (e.g., `- "8080:5000"`).
-- Change default credentials in scripts for production use.
+    myapp-net (Docker bridge network)
 
----
+🔁 Restart Policy:
 
-## Submission
-1. Create a **public GitHub repository** named **`<your_registration_number>`**.
-2. Copy all project files into that repo.
-3. Commit and push:
-   ```bash
-   git init
-   git add .
-   git commit -m "CCS3308 Assignment 1 submission"
-   git branch -M main
-   git remote add origin https://github.com/<your_username>/<your_registration_number>.git
-   git push -u origin main
-   ```
-4. Submit the repository link via the LMS.
+    on-failure for both containers
+
+🧰 Optional: Using Docker Compose
+
+docker compose up -d       # Start
+docker compose stop        # Stop containers (data remains)
+docker compose down        # Remove containers only
+docker compose down -v     # Remove everything including volume
+
+📤 Submission
+
+Push to GitHub like this:
+
+git init
+git add .
+git commit -m "Assignment 1 submission"
+git branch -M main
+git remote add origin https://github.com/Tkothalawala/CIT-23-02-0344.git
+git push -u origin main
+
+Then submit the GitHub repo link to your LMS.
