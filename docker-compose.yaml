@@ -1,0 +1,41 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    container_name: my-postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: mydb
+    volumes:
+      - myapp-db:/var/lib/postgresql/data
+    networks:
+      - myapp-net
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d mydb -h 127.0.0.1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build: ./flask-app
+    container_name: my-flask
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: my-postgres
+      DB_USER: admin
+      DB_PASSWORD: admin123
+      DB_NAME: mydb
+    depends_on:
+      - db
+    networks:
+      - myapp-net
+    restart: on-failure
+
+volumes:
+  myapp-db:
+
+networks:
+  myapp-net:
