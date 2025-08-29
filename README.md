@@ -20,15 +20,15 @@ This project is a containerized web application using Docker that includes:
     Docker network for container communication
 
 This setup demonstrates a multi-service application using Docker, as required by Assignment 1.
-📋 Features
+ Features
 
-✅ Two services (Flask + PostgreSQL)
-✅ One named volume (myapp-db)
-✅ Custom Docker network (myapp-net)
-✅ Restart policy: on-failure
-✅ Scripts to manage the lifecycle
-✅ README and documentation
-⚙️ System Requirements
+ Two services (Flask + PostgreSQL)
+ One named volume (myapp-db)
+ Custom Docker network (myapp-net)
+ Restart policy: on-failure
+ Scripts to manage the lifecycle
+ README and documentation
+ System Requirements
 
     Ubuntu 20.04+ or 22.04+
 
@@ -38,7 +38,7 @@ This setup demonstrates a multi-service application using Docker, as required by
 
     Git
 
-🧪 Installation (on Ubuntu)
+ Installation (on Ubuntu)
 
 First, install Docker (if not already done):
 
@@ -66,7 +66,7 @@ newgrp docker
 # 5. Confirm installation
 docker version
 
-🚀 Running the App
+ Running the App
 
     Unzip the project:
 
@@ -97,7 +97,7 @@ http://localhost:5000
 
 ./remove-app.sh
 
-🗃️ Project Structure
+ Project Structure
 
 ccs3308-docker-app/
 ├── flask-app/
@@ -110,7 +110,7 @@ ccs3308-docker-app/
 ├── docker-compose.yaml  (optional)
 └── README.md
 
-🧠 App Logic
+ App Logic
 
     On visiting http://localhost:5000
 
@@ -120,34 +120,34 @@ ccs3308-docker-app/
 
     Restarting the containers does not reset the counter.
 
-🧪 Docker Details
+ Docker Details
 
-🛠 Services:
+ Services:
 
     Flask web service (container: my-flask)
 
     PostgreSQL database (container: my-postgres)
 
-📦 Volume:
+ Volume:
 
     myapp-db (bound to /var/lib/postgresql/data)
 
-🌐 Network:
+ Network:
 
     myapp-net (Docker bridge network)
 
-🔁 Restart Policy:
+ Restart Policy:
 
     on-failure for both containers
 
-🧰 Optional: Using Docker Compose
+ Optional: Using Docker Compose
 
 docker compose up -d       # Start
 docker compose stop        # Stop containers (data remains)
 docker compose down        # Remove containers only
 docker compose down -v     # Remove everything including volume
 
-📤 Submission
+ Submission
 
 Push to GitHub like this:
 
