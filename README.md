@@ -1,9 +1,13 @@
 CCS3308 – Virtualization and Containers – Assignment 1
 
-🧑‍🎓 Student: Dilshan Kodithuwakku
+🧑‍🎓 Student: Tharindu Kothalawala
 🆔 Registration No: CIT-23-02-0344
 📅 Due Date: 15th August 2025
 📦 Application Overview
+
+Dear Sir,
+Ubuntu was not worked in my personal laptop.So I do this assignment form my friend's laptop. He name is Dilshan kodithuwakku.(cit-23-02-0299).
+Thank you.
 
 This project is a containerized web application using Docker that includes:
 
